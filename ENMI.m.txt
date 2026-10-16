@@ -1,0 +1,59 @@
+%ENMI
+tic
+clc
+clear all
+close all
+F=imread('goldhill.jpg');
+F=rgb2gray(F);
+imshow(F);
+% F=double(F);
+F1 = imresize(F,.5);
+figure,imshow(F1);
+a=double(F1);
+% a=F1
+[s,t] = size(a);
+p=0;
+q=0;
+for i=1:s
+     for j=1:t
+         c(i+p,j+q)=a(i,j);
+         q=q+1;
+     end
+     p=p+1;
+     q=0;
+end
+[m,n]=size(c);
+for i=1:2:((m)-1)
+    for j=1:2:((n)-1)
+        c(i,j+1)=floor(c(i,j)+c(i,j+2));
+        c(i+1,j)=floor((c(i,j)+c(i+2,j))/2);
+        c(i+1,j+1)=floor((c(i,j)+c(i,j+2)+c(i+2,j)+c(i+2,j+2))/4);
+    end
+end
+% F=double(F)
+% 
+% % Calculate Mean Squared Error (MSE)
+% mse = sum((F(:) - c(:)).^2) / numel(F);
+% 
+% % Calculate Peak Signal-to-Noise Ratio (PSNR)
+% maxValue = max(F(:));  % Max value of the original image
+% psnr = 10 * log10(maxValue^2 / mse);
+% 
+% % Display the results
+% fprintf('MSE: %f\n', mse);
+% fprintf('PSNR: %f dB\n', psnr);
+% % peaksnr = psnr(c,F)
+% edgesOriginal = edge(F, 'sobel');
+% edgesProcessed = edge(c, 'sobel');
+% preservedEdges = sum(sum(edgesOriginal & edgesProcessed));
+% totalOriginalEdges = sum(sum(edgesOriginal));
+% EKI = preservedEdges / totalOriginalEdges
+c=uint8(c);
+outputFileName = 'D:\grace\mat programs\1.jpg';
+imwrite(c, outputFileName);
+figure,imshow(c);
+peaksnr = psnr(c,F);
+[ssimval, ssimmap] = ssim(c,F);
+ ssimval 
+ toc
+
